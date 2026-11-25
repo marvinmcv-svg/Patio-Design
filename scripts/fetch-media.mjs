@@ -7,8 +7,11 @@ const OUT = 'public/media/ig', TMP = '.raw/dl';
 fs.mkdirSync(OUT, { recursive: true }); fs.mkdirSync(TMP, { recursive: true });
 const run = (cmd, args) => execFileSync(cmd, args, { stdio: ['ignore', 'pipe', 'pipe'] });
 const get = (url, file) => { for (let i = 0; i < 3; i++) { try { run('curl', ['-sSfL', '--max-time', '60', '-o', file, url]); if (fs.statSync(file).size > 500) return true; } catch {} } return false; };
+// Not published: official statements unrelated to shopping (security incident notices).
+const EXCLUDE = new Set(['DekpJIlPd2i', 'DeX7xR4loEf'])
 const manifest = { posts: {} };
 for (const p of Object.values(posts)) {
+  if (EXCLUDE.has(p.code)) continue
   const entry = { code: p.code, date: p.date, type: p.type, plays: p.plays || 0, caption: p.caption, images: [], video: null, poster: null };
   p.images.forEach((url, i) => {
     const base = `${p.code}-${i}`, raw = `${TMP}/${base}.jpg`;

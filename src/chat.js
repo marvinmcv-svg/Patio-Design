@@ -12,7 +12,7 @@ const norm = (s) => s.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, 
 function findPlace(q) {
   const n = norm(q)
   return [...stores.map((s) => ({ ...s, kind: 'store' })), ...restaurants.map((r) => ({ ...r, kind: 'food' }))]
-    .find((p) => n.includes(norm(p.name).replace(/['’]/g, '')) || n.includes(norm(p.slug.replace(/-/g, ' '))) || n.includes(norm(p.ig)))
+    .find((p) => n.includes(norm(p.name).replace(/['’]/g, '')) || n.includes(norm(p.slug.replace(/-/g, ' '))) || (p.ig && n.includes(norm(p.ig))))
 }
 
 export function localAnswer(q) {
@@ -20,9 +20,9 @@ export function localAnswer(q) {
   const p = findPlace(q)
   const path = p ? (p.kind === 'food' ? `/gastronomia/${p.slug}` : `/tiendas/${p.slug}`) : ''
   if (p && /(menu|carta|comer|plato|probar)/.test(n) && p.kind === 'food')
-    return `Según lo que publicó ${p.name}: ${p.menu.join(', ')}. No es el menú completo${p.wa ? `; pedí la carta por WhatsApp al ${p.phone}` : `; consultales por Instagram @${p.ig}`}. Más en ${path}`
+    return `Según lo que publicó ${p.name}: ${p.menu.join(', ')}. No es el menú completo${p.wa ? `; pedí la carta por WhatsApp al ${p.phone}` : `; consultales por Instagram${p.ig ? ' @' + p.ig : ''}`}. Más en ${path}`
   if (p && /(reserv)/.test(n))
-    return p.wa ? `Podés reservar en ${p.name} por WhatsApp al ${p.phone}. Abrí ${path} y tocá "Reservar por WhatsApp".` : `${p.name} no publicó un número de reservas. Escribiles por Instagram @${p.ig} o mirá ${path}.`
+    return p.wa ? `Podés reservar en ${p.name} por WhatsApp al ${p.phone}. Abrí ${path} y tocá "Reservar por WhatsApp".` : `${p.name} no publicó un número de reservas. Escribiles por Instagram${p.ig ? ' @' + p.ig : ''} o mirá ${path}.`
   if (p) return `${p.name} está en Patio Design (${p.kind === 'food' ? p.cuisine : catName(p.cat)}). ${p.about} Más info en ${path}`
   if (/(abiert|horario|hora|cierra|abre)/.test(n))
     return `${open ? 'Sí, ahora está abierto' : 'Ahora está cerrado'}. Horario general: lunes a sábado 07:00–22:00, domingo 08:00–21:00${th ? ` (hoy ${th.open}–${th.close})` : ''}. Cada local puede tener su propio horario.`

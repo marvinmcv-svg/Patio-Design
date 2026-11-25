@@ -3,3 +3,6 @@ dist
 .raw
 .vercel
 .env*
+e2e-report
+e2e-screens
+test-results

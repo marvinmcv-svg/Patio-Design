@@ -9,16 +9,16 @@ import { storeCard, foodCard } from './cards.js'
 gsap.registerPlugin(ScrollTrigger)
 
 export default function home() {
-  const featured = ['pretty', 'purificacion-garcia', 'levis', 'adidas', 'livi-luxe', 'vis-curtiembre', 'cosmet', 'samsara', 'opticas-pauker', 'casa-elena']
+  const featured = ['pretty', 'vickys-casual', 'aldo', 'adidas', 'livi-luxe', 'indigo', 'perfumeria-first', 'arezzo', 'hijos-de-ramon', 'kare']
     .map((s) => stores.find((x) => x.slug === s)).filter(Boolean)
   const open = isOpen(), th = todayHours()
-  const foodLayout = ['big', 'wide', '', '', 'big', 'wide', '', '', '', '', '']
+  const foodLayout = ['big', '', '', '', '', 'big', '', '', '', '', 'big']
   const ringPics = Object.values(posts).filter((p) => p.images.length && p.type !== 2).slice(0, 14)
 
   const html = `
   <section class="hero" id="inicio" aria-label="Inicio">
     <div class="hero-bg" aria-hidden="true">
-      ${heroSlides.map((s, i) => { const im = pic(s.img); return `<div class="hero-slide${i === 0 ? ' on' : ''}" data-i="${i}"><img src="${bgSrc(im)}" alt="" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async"></div>` }).join('')}
+      ${[0, 1, 2].slice(0, isPhone ? 1 : 3).map((k) => `<div class="hero-col" data-k="${k}">${heroSlides.map((s, i) => { const im = pic(s.img); const first = i === k % heroSlides.length; return `<div class="hero-slide${first ? ' on' : ''}" data-i="${i}"><img src="${bgSrc(im)}" alt="" ${first ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async"></div>` }).join('')}</div>`).join('')}
       <div class="hero-vignette"></div>
     </div>
     <canvas class="hero-canvas" aria-hidden="true"></canvas>
@@ -44,6 +44,10 @@ export default function home() {
     <p class="manifesto-text">Patio Design introduce un nuevo concepto en Santa Cruz: un punto de encuentro donde las plantas y las fuentes de agua se funden con la moda y la gastronomía. No es solo un lugar para comprar, es un lugar de estar.</p>
   </section>
 
+  <section class="marquee" aria-label="Marcas en Patio Design">
+    <div class="marquee-track">${[0, 1].map((dup) => `<div class="marquee-row" ${dup ? 'aria-hidden="true"' : ''}>${[...stores, ...restaurants].map((p) => `<a href="${p.cuisine ? '/gastronomia/' : '/tiendas/'}${p.slug}" ${dup ? 'tabindex="-1"' : ''}>${esc(p.name)}</a><i>✦</i>`).join('')}</div>`).join('')}</div>
+  </section>
+
   <section class="facts" aria-label="En cifras">
     <div class="facts-bg" aria-hidden="true"><img src="${bgSrc(pic('DfKsneKivQ9:0'))}" alt="" loading="lazy"></div>
     <div class="wrap facts-grid">
@@ -63,7 +67,7 @@ export default function home() {
         return `<a class="cat-card" href="${c.href || `/tiendas?cat=${c.slug}`}" data-cursor="Ver" data-tilt>
           <div class="cat-media">${img(im, { alt: c.name, sizes: '(max-width:760px) 85vw, 46vw' })}<i class="glare"></i></div>
           <div class="cat-body"><span class="cat-n">${String(i + 1).padStart(2, '0')}</span><h3>${esc(c.name)}</h3><p>${esc(c.blurb)}</p>
-          <div class="cat-logos">${inCat.slice(0, 5).map((s) => wordmark(s.name, 'wm-xs')).join('')}${inCat.length > 5 ? `<span class="more">+${inCat.length - 5}</span>` : ''}</div></div>
+          <p class="cat-brands">${inCat.slice(0, 4).map((s) => esc(s.name)).join(' · ')}${inCat.length > 4 ? ` <span class="more">+${inCat.length - 4}</span>` : ''}</p></div>
         </a>`
       }).join('')}
     </div></div>
@@ -78,7 +82,7 @@ export default function home() {
   <section class="food" id="gastronomia">
     <div class="wrap sec-head row"><div><p class="kicker">( Gastronomía )</p><h2 class="h2">Sobremesas <em>que se alargan</em></h2></div>
       <a class="btn btn-ghost" href="/gastronomia" data-magnetic>Todos los restaurantes ${icon.arrow}</a></div>
-    <div class="wrap bento">${restaurants.map((r, i) => foodCard(r, i, foodLayout[i] || '')).join('')}</div>
+    <div class="wrap bento">${restaurants.slice(0, 11).map((r, i) => foodCard(r, i, foodLayout[i] || '')).join('')}</div>
   </section>
 
   <section class="reels" id="reels">
@@ -99,9 +103,11 @@ export default function home() {
   </section>
 
   <section class="exp" id="experiencias" aria-label="Experiencias">
-    ${experiences.map((x, i) => `<div class="exp-card" style="z-index:${i + 1}">
-      <div class="exp-media"><img src="${bgSrc(pic(x.img))}" alt="" loading="lazy"></div>
-      <div class="exp-body wrap"><p class="kicker">( ${esc(x.kicker)} )</p><h3 class="h2">${esc(x.title)}</h3><p>${esc(x.text)}</p></div>
+    ${experiences.map((x, i) => `<div class="exp-card rv">
+      <div class="exp-inner wrap">
+        <div class="exp-body"><p class="kicker">( ${String(i + 1).padStart(2, '0')} · ${esc(x.kicker)} )</p><h3 class="h2">${esc(x.title)}</h3><p>${esc(x.text)}</p></div>
+        <div class="exp-media">${img(pic(x.img), { alt: x.title, sizes: '(max-width:760px) 90vw, 40vw' })}</div>
+      </div>
     </div>`).join('')}
   </section>
 
@@ -149,21 +155,25 @@ export default function home() {
       if (!reduced) gsap.from(chars, { yPercent: 110, opacity: 0, rotate: 6, stagger: 0.035, duration: 1.1, ease: 'expo.out', delay: window.__firstLoad ? 1.6 : 0.4 })
 
       // carousel
-      const slides = [...root.querySelectorAll('.hero-slide')], bars = [...root.querySelectorAll('.hero-bars button')]
+      const cols = [...root.querySelectorAll('.hero-col')].map((c) => [...c.querySelectorAll('.hero-slide')])
+      const bars = [...root.querySelectorAll('.hero-bars button')]
+      const N = heroSlides.length
       const cap = root.querySelector('.hero-cap-t')
       let cur = 0, timer, heroVisible = true
       const DUR = reduced ? 9000 : 6500
       const go = (n) => {
-        slides[cur].classList.remove('on'); bars[cur].classList.remove('on', 'done')
-        bars.forEach((b, i) => b.classList.toggle('done', i < n))
-        cur = (n + slides.length) % slides.length
-        slides[cur].classList.add('on'); slides[cur].classList.toggle('alt', cur % 2 === 1)
-        bars[cur].classList.remove('on'); void bars[cur].offsetWidth; bars[cur].classList.add('on')
+        bars[cur].classList.remove('on', 'done')
+        cur = (n + N) % N
+        bars.forEach((b, i) => b.classList.toggle('done', i < cur))
+        cols.forEach((slides, k) => {
+          const want = (cur + k) % N
+          slides.forEach((sl, i) => { sl.classList.toggle('on', i === want); if (i === want) sl.classList.toggle('alt', (cur + k) % 2 === 1) })
+        })
+        void bars[cur].offsetWidth; bars[cur].classList.add('on')
         bars[cur].style.setProperty('--dur', DUR + 'ms')
-        cap.textContent = `${String(cur + 1).padStart(2, '0')} · ${slides[cur].dataset.i && pickCaption(cur)}`
+        cap.textContent = `${String(cur + 1).padStart(2, '0')} · ${heroSlides[cur].caption}`
         clearTimeout(timer); if (heroVisible && !document.hidden) timer = setTimeout(() => go(cur + 1), DUR)
       }
-      const pickCaption = (i) => heroSlides[i].caption
       bars.forEach((b, i) => b.addEventListener('click', () => go(i)))
       bars[0].style.setProperty('--dur', DUR + 'ms'); bars[0].classList.add('on')
       timer = setTimeout(() => go(1), DUR)
@@ -213,15 +223,6 @@ export default function home() {
         const dist = () => track.scrollWidth - innerWidth + 64
         gsap.to(track, { x: () => -dist(), ease: 'none', scrollTrigger: { trigger: '.cats-pin', start: 'top top+=80', end: () => '+=' + dist(), pin: true, scrub: 0.6, invalidateOnRefresh: true } })
         root.querySelectorAll('.cat-media img').forEach((im) => gsap.fromTo(im, { xPercent: -3 }, { xPercent: 3, ease: 'none', scrollTrigger: { trigger: '.cats-pin', start: 'top top+=80', end: () => '+=' + dist(), scrub: true } }))
-      }
-
-      // stacked experiences
-      if (!reduced) {
-        const cards = gsap.utils.toArray('.exp-card')
-        cards.forEach((c, i) => {
-          if (i === cards.length - 1) return
-          gsap.to(c, { scale: 0.9, borderRadius: 28, ...(isPhone ? {} : { filter: 'brightness(.45)' }), ease: 'none', scrollTrigger: { trigger: cards[i + 1], start: 'top bottom', end: 'top top', scrub: true } })
-        })
       }
 
       // ring

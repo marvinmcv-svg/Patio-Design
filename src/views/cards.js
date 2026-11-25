@@ -18,7 +18,7 @@ export function foodCard(r, i = 0, cls = '') {
       <span class="chip">${esc(r.cuisine)}</span>
       <h3>${esc(r.name)}</h3>
       <div class="fcard-actions">
-        ${r.wa ? `<a class="btn btn-sm btn-wa" href="https://wa.me/${r.wa}?text=${encodeURIComponent(`Hola ${r.name}, quiero hacer una reserva. Vengo desde la web de Patio Design.`)}" target="_blank" rel="noopener">${icon.wa} Reservar</a>` : `<a class="btn btn-sm btn-ghost" href="https://www.instagram.com/${r.ig}/" target="_blank" rel="noopener">${icon.ig} Instagram</a>`}
+        ${r.wa ? `<a class="btn btn-sm btn-wa" href="https://wa.me/${r.wa}?text=${encodeURIComponent(`Hola ${r.name}, quiero hacer una reserva. Vengo desde la web de Patio Design.`)}" target="_blank" rel="noopener">${icon.wa} Reservar</a>` : `<a class="btn btn-sm btn-ghost" href="${r.ig ? `https://www.instagram.com/${r.ig}/` : `https://www.instagram.com/p/${r.posts[0]}/`}" target="_blank" rel="noopener">${icon.ig} Instagram</a>`}
         <a class="btn btn-sm btn-ghost" href="/gastronomia/${r.slug}">Ver más</a>
       </div>
     </div>

@@ -20,15 +20,15 @@ export function createHero(canvas, { lines = ['PATIO', 'DESIGN'], phone = false 
     const g = c.getContext('2d', { willReadFrequently: true })
     const fit = (text, maxW, start) => {
       let s = start
-      g.font = `800 ${s}px Syne, sans-serif`
-      while (g.measureText(text).width > maxW && s > 20) { s -= 4; g.font = `800 ${s}px Syne, sans-serif` }
+      g.font = `600 ${s}px Poppins, sans-serif`
+      while (g.measureText(text).width > maxW && s > 20) { s -= 4; g.font = `600 ${s}px Poppins, sans-serif` }
       return s
     }
     g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle'
-    const s1 = fit(lines[0], cw * 0.94, 330)
-    g.font = `800 ${s1}px Syne, sans-serif`; g.fillText(lines[0], cw / 2, ch * 0.33)
-    const s2 = fit(lines[1], cw * 0.94, Math.min(s1, 330))
-    g.font = `800 ${s2}px Syne, sans-serif`; g.fillText(lines[1], cw / 2, ch * 0.76)
+    const s1 = fit(lines[0], cw * 0.8, 245)
+    g.font = `600 ${s1}px Poppins, sans-serif`; g.fillText(lines[0], cw / 2, ch * 0.25)
+    const s2 = fit(lines[1], cw * 0.8, s1)
+    g.font = `600 ${s2}px Poppins, sans-serif`; g.fillText(lines[1], cw / 2, ch * 0.7)
     const data = g.getImageData(0, 0, cw, ch).data
     const pts = []
     const step = phone ? 4 : 2
@@ -96,7 +96,7 @@ export function createHero(canvas, { lines = ['PATIO', 'DESIGN'], phone = false 
     // fit 1400px-wide wordmark into ~92% of the view width at z=0
     const visW = 2 * Math.tan((camera.fov * Math.PI) / 360) * camera.position.z * camera.aspect
     const visH = visW / camera.aspect
-    if (mat) mat.uniforms.uScale.value = Math.min((visW * 0.8) / 1400, (visH * 0.9) / 640)
+    if (mat) mat.uniforms.uScale.value = Math.min((visW * 0.8) / 1400, (visH * 0.85) / 640)
   }
 
   const onMove = (e) => {
@@ -125,7 +125,7 @@ export function createHero(canvas, { lines = ['PATIO', 'DESIGN'], phone = false 
   const onVis = () => { if (!document.hidden && !raf) loop() }
 
   ;(async () => {
-    try { await Promise.race([document.fonts.load('800 300px Syne'), new Promise((r) => setTimeout(r, 2500))]) } catch {}
+    try { await Promise.race([document.fonts.load('600 300px Poppins'), new Promise((r) => setTimeout(r, 2500))]) } catch {}
     if (disposed) return
     build(); resize(); loop()
   })()

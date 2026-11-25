@@ -16,7 +16,7 @@ L.push('', '# Eventos y promociones (publicados por el mall)')
 events.forEach((e) => L.push(`- ${e.title} (${e.when}): ${e.text}${e.link ? ` Bases: ${e.link}` : ''} [post ${media.posts[e.post]?.date || ''}]`))
 L.push('', '# Restaurantes y cafés')
 restaurants.forEach((r) => {
-  L.push(`## ${r.name} — ${r.cuisine} — página /gastronomia/${r.slug} — Instagram @${r.ig}`)
+  L.push(`## ${r.name} — ${r.cuisine} — página /gastronomia/${r.slug} — Instagram ${r.ig ? '@' + r.ig : 'no publicado'}`)
   L.push(`Sobre: ${r.about} Para probar (según publicaciones, no es menú completo): ${r.menu.join(', ')}.`)
   L.push(r.wa ? `Reservas/WhatsApp: ${r.phone} (https://wa.me/${r.wa})` : 'Reservas: no publicó número; escribir por Instagram.')
   postsOf(r.posts).forEach((p) => L.push(`  Publicación ${p.date}: ${clean(p.caption).slice(0, 300)}`))

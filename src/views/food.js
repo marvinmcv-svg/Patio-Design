@@ -4,7 +4,7 @@ import { img, esc, icon, wordmark } from '../ui.js'
 import { foodCard } from './cards.js'
 
 export default function food() {
-  const layout = ['big', 'wide', '', '', 'big', 'wide', '', '', '', '', '']
+  const layout = ['big', '', '', '', '', '', '', 'big', '', '', '', '', 'big']
   const nightEvents = events.filter((e) => /acústico|Tardeo|First Call/i.test(e.title))
   return {
     page: 'food',
@@ -18,7 +18,7 @@ export default function food() {
       <p class="lead">Sushi, cocina peruana, hamburguesas, café y helados alrededor de la plaza. Reservá directo con cada restaurante.</p>
     </section>
     <section class="wrap logo-wall" aria-label="Restaurantes">
-      ${restaurants.map((r) => `<a href="/gastronomia/${r.slug}" class="logo-tile">${wordmark(r.name, 'wm-md')}<span>${esc(r.name)}</span></a>`).join('')}
+      ${restaurants.map((r) => `<a href="/gastronomia/${r.slug}" class="logo-tile">${wordmark(r.name, 'wm-sm')}<span><b>${esc(r.name)}</b><small>${esc(r.cuisine)}</small></span></a>`).join('')}
     </section>
     <section class="wrap bento">${restaurants.map((r, i) => foodCard(r, i, layout[i] || '')).join('')}</section>
     <section class="wrap events" id="noches">
