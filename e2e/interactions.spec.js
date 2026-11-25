@@ -60,7 +60,7 @@ test('counters animate to their real values', async ({ page }) => {
   await expect(first).toHaveText(target, { timeout: 6_000 })
 })
 
-test('reels load their video only when needed and play', async ({ page }) => {
+test('reels load their video only when needed and play', async ({ page }, info) => {
   await prep(page)
   await gotoApp(page, '/')
   const card = page.locator('#reels .vcard').first()
@@ -68,7 +68,8 @@ test('reels load their video only when needed and play', async ({ page }) => {
   const v = card.locator('video')
   await expect(v).toHaveAttribute('poster', /\/media\/ig\//)
   await expect.poll(() => v.evaluate((el) => !!el.getAttribute('src')), { timeout: 8_000 }).toBe(true)
-  await card.locator('.vplay').click({ force: true })
+  // desktop plays on hover; touch devices play on tap
+  if (isTouch(info)) await card.locator('.vplay').tap(); else await card.hover()
   await expect.poll(() => v.evaluate((el) => !el.paused && el.readyState >= 2), { timeout: 10_000 }).toBe(true)
   await card.locator('.vsound').click({ force: true })
   await expect(card.locator('.vsound')).toHaveAttribute('aria-label', 'Silenciar')

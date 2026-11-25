@@ -71,4 +71,6 @@ export async function expectNoOverflow(page) {
 export async function gotoApp(page, url) {
   await page.goto(url, { waitUntil: 'domcontentloaded' })
   await expect(page.locator('#app h1').first()).toBeVisible({ timeout: 15_000 })
+  // the intro preloader covers the page on first load; real users wait for it too
+  await expect(page.locator('#loader')).toHaveCount(0, { timeout: 15_000 })
 }

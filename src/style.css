@@ -586,7 +586,8 @@ body { font-weight: 400; letter-spacing: -0.005em; }
   .place-hero { padding-top: 84px; }
   .place-hero-in { grid-template-columns: 1fr; }
   .place-figure { order: -1; max-height: none; aspect-ratio: 4 / 5; }
-  .place-badge { margin: -70px 0 14px 16px; position: relative; z-index: 2; }
+  .place-badge { margin: 4px 0 12px; }
+  .place-badge .wm-lg { width: 76px; height: 76px; }
   .marquee-row a { font-size: 26px; }
 }
 @media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }

@@ -50,7 +50,7 @@ export const categories = [
 // "lines" come only from those captions (or the brand's IG bio where noted). Exact unit/floor inside the mall is not published.
 export const stores = [
   // ── Moda
-  { slug: 'pretty', name: 'Pretty', cat: 'moda', ig: 'prettybolivia', posts: ['Df90yValtvq', 'DepD3DCgCp0'], cover: 'DepD3DCgCp0:0',
+  { slug: 'pretty', name: 'Pretty', cat: 'moda', ig: 'prettybolivia', posts: ['Df90yValtvq', 'DepD3DCgCp0'], cover: 'Df90yValtvq:0',
     about: 'Tienda multimarca de moda femenina con marcas internacionales.', lines: ['Cris Barros', 'Mixed', 'Animale', 'Pretty Ballerinas'] }, // lines: [IG-BIO:prettybolivia]
   { slug: 'purificacion-garcia', name: 'Purificación García', cat: 'moda', ig: 'fanspgbolivia', posts: ['DfI0el8FMDM', 'DfHs-CWFQYX'], cover: 'DfI0el8FMDM:0',
     about: 'Firma española de moda y accesorios.', lines: ['Moda mujer', 'Carteras', 'Accesorios'] },
