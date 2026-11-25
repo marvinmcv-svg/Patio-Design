@@ -14,6 +14,17 @@ const routes = [
 ]
 
 let ctx = null, cleanups = [], busy = false, first = true
+
+function scrollToHash(hash, tries = 0) {
+  const el = hash && document.querySelector(hash)
+  if (!el) return
+  if (tries === 0) ScrollTrigger.refresh()
+  const smooth = !reduced && tries === 0
+  if (window.__lenis) window.__lenis.scrollTo(el, { offset: -70, immediate: !smooth, duration: 1.2 })
+  else window.scrollTo({ top: el.getBoundingClientRect().top + scrollY - 70, behavior: smooth ? 'smooth' : 'auto' })
+  // smooth scrolls can be cut short by late layout work; verify and correct
+  if (tries < 3) setTimeout(() => { if (Math.abs(el.getBoundingClientRect().top - 70) > 60) scrollToHash(hash, tries + 1) }, smooth ? 1500 : 300)
+}
 const app = () => document.getElementById('app')
 const curtain = () => document.getElementById('curtain')
 
@@ -32,7 +43,7 @@ async function render(url, { push = true, scroll = true } = {}) {
   const { load, params, kind } = match(u.pathname.replace(/\/+$/, '') || '/')
   const modP = load()
   if (!first && !reduced) {
-    await gsap.fromTo(curtain(), { yPercent: 100, visibility: 'visible' }, { yPercent: 0, duration: 0.55, ease: 'expo.inOut' })
+    await gsap.fromTo(curtain(), { y: 0, yPercent: 100, autoAlpha: 1 }, { y: 0, yPercent: 0, duration: 0.55, ease: 'expo.inOut' })
   }
   const mod = await modP
   const view = await mod.default({ params, kind, query: u.searchParams })
@@ -59,8 +70,8 @@ async function render(url, { push = true, scroll = true } = {}) {
   }, app())
   cleanups.push(tilt(app()), magnetic(app()))
   reveal(app())
-  if (u.hash) setTimeout(() => document.querySelector(u.hash)?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' }), 120)
-  if (!first && !reduced) gsap.to(curtain(), { yPercent: -100, duration: 0.6, ease: 'expo.inOut', delay: 0.05 })
+  if (u.hash) setTimeout(() => scrollToHash(u.hash), first ? 400 : 750)
+  if (!first && !reduced) gsap.to(curtain(), { y: 0, yPercent: -100, duration: 0.6, ease: 'expo.inOut', delay: 0.05, onComplete: () => gsap.set(curtain(), { autoAlpha: 0, yPercent: 100 }) })
   if (!first) app().focus({ preventScroll: true })
   first = false
   busy = false
@@ -87,7 +98,7 @@ export function startRouter() {
     e.preventDefault()
     const u = new URL(href, location.origin)
     if (u.pathname === location.pathname && u.search === location.search && u.hash) {
-      document.querySelector(u.hash)?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' })
+      scrollToHash(u.hash)
       history.replaceState({}, '', href)
       document.body.classList.remove('menu-open')
       return

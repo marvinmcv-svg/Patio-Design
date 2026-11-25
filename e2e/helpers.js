@@ -36,7 +36,7 @@ export async function sweep(page) {
       for (const im of document.querySelectorAll('#app img')) {
         const b = im.getBoundingClientRect()
         if (b.bottom < 80 || b.top > innerHeight - 80 || b.width < 4 || b.right < 0 || b.left > innerWidth) continue
-        if (im.closest('.hero-slide:not(.on)')) continue
+        if (im.closest('.hero-slide:not(.on)') || im.classList.contains('next-prev')) continue
         if (im.complete && im.naturalWidth === 0) { out.push('broken ' + im.getAttribute('src')); continue }
         let el = im, op = 1
         while (el && el !== document.body) { op *= +getComputedStyle(el).opacity; el = el.parentElement }

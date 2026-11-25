@@ -82,7 +82,7 @@ section { position: relative; }
 .ld-logo { position: relative; width: 96px; animation: breathe 1.6s ease-in-out infinite; }
 .ld-pct { position: absolute; bottom: 8vh; right: var(--pad); font: 800 clamp(64px, 12vw, 180px)/1 var(--display); letter-spacing: -0.05em; background: var(--brand-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
 @keyframes breathe { 50% { transform: scale(1.08); } }
-#curtain { position: fixed; inset: 0; z-index: 900; background: var(--brand-grad); display: grid; place-items: center; visibility: hidden; transform: translateY(100%); }
+#curtain { position: fixed; inset: 0; z-index: 900; background: var(--brand-grad); display: grid; place-items: center; visibility: hidden; opacity: 0; pointer-events: none; }
 #curtain img { filter: brightness(0) invert(1); opacity: .9; }
 .grain { position: fixed; inset: -50%; z-index: 800; pointer-events: none; opacity: .06; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); animation: grain 1s steps(4) infinite; }
 @keyframes grain { 25% { transform: translate(-3%, 2%); } 50% { transform: translate(2%, -3%); } 75% { transform: translate(-1%, 3%); } }

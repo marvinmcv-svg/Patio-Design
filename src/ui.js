@@ -50,7 +50,7 @@ export function reveal(root = document) {
     (entries) => entries.forEach((e) => {
       if (e.isIntersecting || e.boundingClientRect.top < 0) { e.target.classList.add('is-in'); io.unobserve(e.target) }
     }),
-    { rootMargin: '0px 0px -6% 0px', threshold: 0.01 },
+    { rootMargin: '0px 0px 0px 0px', threshold: 0 },
   )
   els.forEach((el) => {
     if (el.getBoundingClientRect().bottom < 0) el.classList.add('is-in')
